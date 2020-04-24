@@ -10,6 +10,7 @@ output:
 library(MASS)
 library(ISLR)
 library(leaps)
+library(glmnet)
 ```
 # 1 
 ```{r}
@@ -98,23 +99,33 @@ y_test <- x_test$Apps
 y_train <- x_train$Apps
 
 
-x_train$Apps = NULL
-x_test$Apps = NULL
+#x_train$Apps = NULL
+#x_test$Apps = NULL
 # randomize? 
+x_test[-2]
 
 ```
 
 ```{r}
 # 3b 
-linear_model <- lm(y_train ~ x_train)
+linear_model <- lm(Apps ~., data=x_train)
 foo <- predict(linear_model, x_test)
 
 # mse_linear <- mean((ridge.pred-test)^2)/length(test)
 
-ridge.train = glmnet(X[train,],Y[train],alpha=0,lambda=lambdagrid)
+# 3c
+lambdagrid = 10^seq(10,-2,length=100) 
+cv.out = cv.glmnet(Apps~.,data=x_train ,alpha=0, lambda = lambdagrid, family="multinomial")
+bestlambda = cv.out$lambda.min
+bestlambda
+
+ridge.train = glmnet(x_train[-2],y_train,alpha=0,lambda=lambdagrid)
 predict(ridge.train,type='coefficients',s=bestlambda)[1:20,]
 
 ridge.pred = predict(ridge.train,s=bestlambda,newx=X[test,])
 mean((ridge.pred-Y.test)^2)/length(test)
+
+# 3d
+
 ```
 
