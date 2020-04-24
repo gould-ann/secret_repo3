@@ -79,30 +79,42 @@ College
 
 # i could write a function from the last hw
 # but this is R. what is a user defined function anyways?
-test <- data.frame()
-train <- data.frame()
+x_test <- data.frame()
+x_train <- data.frame()
 for (row in 1:nrow(College)) {
   if (row %% 5 == 0){
-    test <- rbind(College[row,], test)
+    x_test <- rbind(College[row,], x_test)
   }
   else{
-    train <- rbind(College[row,], train)
+    x_train <- rbind(College[row,], x_train)
   }
 }
 
-train = na.omit(train)
-test = na.omit(test)
+x_train = na.omit(x_train)
+x_test = na.omit(x_test)
 
 
-# randomizes rows 
-test <- test[sample(nrow(test)),]
-train <- test[sample(nrow(train)),]
+y_test <- x_test$Apps
+y_train <- x_train$Apps
 
-dim(test)
-dim(train)
+
+x_train$Apps = NULL
+x_test$Apps = NULL
+# randomize? 
+
 ```
 
 ```{r}
 # 3b 
+linear_model <- lm(y_train ~ x_train)
+foo <- predict(linear_model, x_test)
+
+# mse_linear <- mean((ridge.pred-test)^2)/length(test)
+
+ridge.train = glmnet(X[train,],Y[train],alpha=0,lambda=lambdagrid)
+predict(ridge.train,type='coefficients',s=bestlambda)[1:20,]
+
+ridge.pred = predict(ridge.train,s=bestlambda,newx=X[test,])
+mean((ridge.pred-Y.test)^2)/length(test)
 ```
 
