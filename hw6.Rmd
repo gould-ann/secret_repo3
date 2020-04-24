@@ -1,0 +1,54 @@
+---
+title: "HW6"
+author: "Ann Gould"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(MASS)
+library(ISLR)
+library(leaps)
+```
+
+```{r}
+head(Boston)
+?Boston
+
+# a 
+m_hat <- median(Boston$crim)
+m_hat
+
+# b
+set.seed(12)
+B <- 1000
+bs_median <- rep(0,B)
+
+n = dim(Boston)[1]
+bootstrap_median <- c()
+
+for (i in 1:B){
+  index = sample(1:n,n,replace=TRUE)
+	bootsample = Boston[index,]
+	print(bootsample)
+#	bootstrap_median <- rbind(bootstrap_median, median(bootsample))
+}
+bootstrap_median
+
+# c 
+Y = rep(0,dim(Boston)[1])
+Y[Boston$crim > m_hat] = 1
+
+Boston$Y = Y
+```
+
+``` {r}
+# d
+
+log.train1 <- glm(Y~nox,age, data=Boston, family=binomial)
+
+# e leave one out cross validation
+log.train2 <- glm(Y~nox,age,rad data=Boston, family=binomial)
+```
+
