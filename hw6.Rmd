@@ -11,7 +11,7 @@ library(MASS)
 library(ISLR)
 library(leaps)
 ```
-
+# 1 
 ```{r}
 head(Boston)
 ?Boston
@@ -31,9 +31,12 @@ bootstrap_median <- c()
 for (i in 1:B){
   index = sample(1:n,n,replace=TRUE)
 	bootsample = Boston[index,]
- bootstrap_median <- rbind(bootstrap_median, median(bootsample$crim))
+ bootstrap_median[i] <-median(bootsample$crim)
 }
 bootstrap_median
+
+se <- sqrt(sum((bootstrap_median-mean(bootstrap_median))^2)/(B-1))
+se 
 
 # c 
 Y = rep(0,dim(Boston)[1])
@@ -43,11 +46,55 @@ Boston$Y = Y
 ```
 
 ``` {r}
+
+se <- 
+se 
 # d
 
-log.train1 <- glm(Y~nox,age, data=Boston, family=binomial)
+log.train1 <- glm(Y~nox+age, data=Boston, family=binomial)
+summary(log.train1)
 
-# e leave one out cross validation
-log.train2 <- glm(Y~nox,age,rad data=Boston, family=binomial)
+# e 
+
+# f leave one out cross validation
+log.train2 <- glm(Y~nox+age+rad, data=Boston, family=binomial)
+summary(log.train2)
 ```
+
+
+# 2 
+```{r}
+set.seed(12)
+data("College")
+College
+```
+
+# 3a
+```{r}
+
+# i could write a function from the last hw
+# but this is R. what is a user defined function anyways?
+test <- data.frame()
+train <- data.frame()
+for (row in 1:nrow(College)) {
+  if (row %% 5 == 0){
+    test <- rbind(College[row,], test)
+  }
+  else{
+    train <- rbind(College[row,], train)
+  }
+}
+
+train = na.omit(train)
+test = na.omit(test)
+
+
+# randomizes rows 
+test <- test[sample(nrow(test)),]
+train <- test[sample(nrow(train)),]
+
+dim(test)
+dim(train)
+```
+
 
