@@ -31,8 +31,7 @@ bootstrap_median <- c()
 for (i in 1:B){
   index = sample(1:n,n,replace=TRUE)
 	bootsample = Boston[index,]
-	print(bootsample)
-#	bootstrap_median <- rbind(bootstrap_median, median(bootsample))
+ bootstrap_median <- rbind(bootstrap_median, median(bootsample$crim))
 }
 bootstrap_median
 
